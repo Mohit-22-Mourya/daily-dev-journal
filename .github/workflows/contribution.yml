@@ -15,15 +15,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Make daily contribution
         run: |
           echo "Daily contribution: $(date)" >> daily-contribution.txt
 
-      - name: Commit changes
+      - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add daily-contribution.txt
           git commit -m "Daily contribution" || echo "No changes to commit"
-          git push
+          git pull --rebase origin main
+          git push origin main
